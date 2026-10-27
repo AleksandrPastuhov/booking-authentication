@@ -1,5 +1,6 @@
 package authentication.web;
 
+import authentication.login.InvalidCredentialsException;
 import authentication.registration.UserAlreadyExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +49,17 @@ public class GlobalExceptionHandler {
                 .body(new ValidationErrorDto(
                         "Not valid username or password",
                         errors,
+                        LocalDateTime.now()
+                ));
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<ErrorMessageDto> handleEntityInvalidCredentialsException(
+            InvalidCredentialsException e
+    ) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorMessageDto(
+                        e.getMessage(),
                         LocalDateTime.now()
                 ));
     }
