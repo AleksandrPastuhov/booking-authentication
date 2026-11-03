@@ -24,13 +24,13 @@ public class RegistrationService {
 
     @Transactional
     public User createUser(User createUser) {
-        if(userRepository.existsByUsername(createUser.getUsername())) {
-            throw new UserAlreadyExistsException(createUser.getUsername());
+        if(userRepository.existsByLogin(createUser.getLogin())) {
+            throw new UserAlreadyExistsException(createUser.getLogin());
         }
         createUser.setUserRole(UserRole.User);
         createUser.setPassword(passwordEncoder.encode(createUser.getPassword()));
         userRepository.save(createUser);
-        log.info("Create user:{}", createUser.getUsername());
+        log.info("Create user:{}", createUser.getLogin());
 
         return createUser;
     }

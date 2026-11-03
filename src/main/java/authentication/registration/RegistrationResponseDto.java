@@ -3,10 +3,10 @@ package authentication.registration;
 import authentication.domain.User;
 
 public record RegistrationResponseDto(
-        String username
+        String login
 ) {
 
     public RegistrationResponseDto(User user) {
-        this(user.getUsername());
+        this(user.getLogin());
     }
 }

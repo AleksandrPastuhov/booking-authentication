@@ -55,7 +55,7 @@ public class RegistrationControllerTest {
         RegistrationResponseDto registrationResponseDto = new RegistrationResponseDto(user);
         User savedUser = new User("alice", "1234", UserRole.User);
         when(registrationService.createUser(user))
-                .thenThrow(new UserAlreadyExistsException(user.getUsername()));
+                .thenThrow(new UserAlreadyExistsException(user.getLogin()));
         when(mapper.registrationRequestDtoToUser(registrationRequestDto))
                 .thenReturn(user);
         ResponseEntity<RegistrationResponseDto> responseEntity = registrationController.createUser(registrationRequestDto);

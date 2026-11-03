@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class Mapper {
 
     public User registrationRequestDtoToUser(RegistrationRequestDto registrationRequestDto) {
-        return new User(registrationRequestDto.username(), registrationRequestDto.password());
+        return new User(registrationRequestDto.login(), registrationRequestDto.password());
     }
 
     public RegistrationResponseDto userToRegistrationResponseDto(User user) {
@@ -17,6 +17,6 @@ public class Mapper {
     }
 
     public LoginResponseDto userToLoginResponseDto(User user) {
-        return new LoginResponseDto(user.getUsername());
+        return new LoginResponseDto(user.getLogin());
     }
 }

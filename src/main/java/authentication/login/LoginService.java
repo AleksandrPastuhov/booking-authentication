@@ -3,7 +3,6 @@ package authentication.login;
 import authentication.domain.User;
 import authentication.domain.UserRepository;
 import authentication.registration.RegistrationService;
-import authentication.registration.UserAlreadyExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,7 +23,7 @@ public class LoginService {
     }
 
     public User login(String login, String password) {
-        Optional<User> user = userRepository.findByUsername(login);
+        Optional<User> user = userRepository.findByLogin(login);
         if(user.isEmpty()) {
             throw new InvalidCredentialsException();
         }

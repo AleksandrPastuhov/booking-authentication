@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -22,8 +23,10 @@ public class GlobalExceptionHandler {
 
     private final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorMessageDto> handleEntityException(
+    @ExceptionHandler(
+            Exception.class
+    )
+    public ResponseEntity<ErrorMessageDto> handleException(
             Exception e
     ) {
         log.error(e.getMessage(), e);
@@ -34,11 +37,13 @@ public class GlobalExceptionHandler {
                 ));
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ValidationErrorDto> handleEntityMethodArgumentNotValidException(
+    @ExceptionHandler(
+            MethodArgumentNotValidException.class
+    )
+    public ResponseEntity<ValidationErrorDto> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException e
     ) {
-        log.info("User specified not valid username or password");
+        log.info("User specified not valid login or password");
         Map<String, String> errors = e.getBindingResult().getFieldErrors().stream()
                 .collect(Collectors.toMap(
                                 FieldError::getField,
@@ -47,13 +52,15 @@ public class GlobalExceptionHandler {
                 );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ValidationErrorDto(
-                        "Not valid username or password",
+                        "Not valid login or password",
                         errors,
                         LocalDateTime.now()
                 ));
     }
 
-    @ExceptionHandler(InvalidCredentialsException.class)
+    @ExceptionHandler(
+            InvalidCredentialsException.class
+    )
     public ResponseEntity<ErrorMessageDto> handleEntityInvalidCredentialsException(
             InvalidCredentialsException e
     ) {
@@ -71,11 +78,21 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorMessageDto> handleEntityUserAlreadyExistsException(
             Exception e
     ) {
-        log.info("username occupied");
+        log.info("login occupied");
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ErrorMessageDto(
-                        "This username occupied",
+                        "This login occupied",
                         LocalDateTime.now()
                 ));
+    }
+
+    @ExceptionHandler({
+            HttpMessageNotReadableException.class
+    })
+    public ResponseEntity<String> handleHttpMessageNotReadableException(
+            Exception e
+    ) {
+        log.info("bad request");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
     }
 }

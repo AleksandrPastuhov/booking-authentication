@@ -25,7 +25,7 @@ public class LoginController {
     public ResponseEntity<LoginResponseDto> login(
             @RequestBody @Valid LoginRequestDto loginRequestDto
     ) {
-        User user = loginService.login(loginRequestDto.username(), loginRequestDto.password());
+        User user = loginService.login(loginRequestDto.login(), loginRequestDto.password());
         return ResponseEntity.ok(mapper.userToLoginResponseDto(user));
     }
 }
